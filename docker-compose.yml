@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  proxy:
+    image: dcr.teletraan.io/library/hook-proxy:latest
+    ports:
+      - "8081:8000"
+    volumes:
+      - ./rules.yaml:/app/rules.yaml

@@ -1,0 +1,5 @@
+deploy_hook: 'https://example.com/generic-webhook-trigger/invoke'
+build_hook: 'https://example.com/generic-webhook-trigger/invoke'
+library/alpine:
+  token: 123456
+
