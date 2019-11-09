@@ -17,6 +17,7 @@ Example harbor hook json data:
 import os
 import hmac
 from dataclasses import dataclass, asdict
+from datetime import datetime, timezone, timedelta
 
 import requests
 import yaml
@@ -25,6 +26,8 @@ from flask import Flask, request, abort
 app = Flask(__name__)
 
 TAGS = ['dev-latest', 'release-latest', 'hotfix-release']
+
+TIME_ZONE = timezone(timedelta(hours=8), 'Asia/Shanghai')
 
 
 def load_rules():
@@ -42,23 +45,29 @@ def pretty_print(s):
     print('*' * 20)
 
 
+def format_timestamp(ts):
+    dt = datetime.fromtimestamp(ts, tz=TIME_ZONE)
+    return dt.strftime('%Y-%m-%d %H:%M:%S')
+
+
 @dataclass
 class Image:
     name: str
-    repo_full_name: str
+    full_name: str
     tag: str
     resource_url: str
+    occur_at: str
 
     def send_hook(self, hook_url, token=''):
         if token:
             hook_url += f'?token={token}'
         resp = requests.post(hook_url, json=asdict(self))
-        pretty_print(str(resp.content))
+        pretty_print(resp.content)
 
     def handle_image(self):
         pretty_print(str(self))
         hook = RULES.get('deploy_hook')
-        rule = RULES.get(self.repo_full_name)
+        rule = RULES.get(self.full_name)
         if not hook:
             pretty_print('No deploy hook url.')
             abort(500)
@@ -92,8 +101,8 @@ def deploy():
         abort(400)
 
     resource = resources[0]
-    image = Image(name=repo['name'], repo_full_name=repo['repo_full_name'], resource_url=resource['resource_url'],
-                  tag=resource['tag'])
+    image = Image(name=repo['name'], full_name=repo['repo_full_name'], resource_url=resource['resource_url'],
+                  tag=resource['tag'], occur_at=format_timestamp(data['occur_at']))
 
     image.handle_image()
     return 'ok'
