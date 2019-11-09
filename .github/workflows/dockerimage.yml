@@ -15,6 +15,6 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag dcr.teletraan.io/library/hook-proxy:latest
     - name: Login docker regsitry
-      run: docker login dcr.teletraan.io -u ${secrets.DCR_USER} -p ${secrets.DCR_PASSWORD}
+      run: docker login dcr.teletraan.io -u ${{ secrets.DCR_USER }} -p ${{ secrets.DCR_PASSWORD }}
     - name: Push the Docker image
       run: docker push dcr.teletraan.io/library/hook-proxy:latest
