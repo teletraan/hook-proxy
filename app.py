@@ -141,6 +141,10 @@ def build():
         pretty_print('No project token.')
         abort(400)
 
+    if request.json.get('deleted', None):
+        pretty_print('Delete branch, no action.')
+        return 'ok'
+
     github_auth_check()
 
     url = hook + f'?token={token}'
