@@ -1,5 +1,3 @@
-deploy_hook: 'https://example.com/generic-webhook-trigger/invoke'
-build_hook: 'https://example.com/generic-webhook-trigger/invoke'
-library/alpine:
-  token: 123456
-
+deploys:
+  - url: https://simplehook.teletraan.io/hooks/dev-deploy
+    token: '123'
