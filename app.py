@@ -113,7 +113,7 @@ def hello():
 @app.post('/deploy')
 def deploy(req: DeployRequest):
     print(req)
-    if req.type != 'pushImage':
+    if req.type != 'PUSH_ARTIFACT':
         pretty_print('Not push image, direct return')
         return 'ok'
 
@@ -136,4 +136,3 @@ def deploy(req: DeployRequest):
 
     image.handle_image()
     return 'ok'
-
